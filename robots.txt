@@ -1,0 +1,40 @@
+# Robots.txt - Polyclinique Kennedy Bouaké
+# Site web : https://polycliniquekennedy.com
+# Développé par W2K-Digital
+
+# Autoriser tous les robots
+User-agent: *
+
+# Pages autorisées
+Allow: /
+
+# Fichiers et dossiers à ne pas indexer
+Disallow: /admin/
+Disallow: /private/
+Disallow: /*.pdf$
+
+# Sitemap
+Sitemap: https://polycliniquekennedy.com/sitemap.xml
+
+# Délai entre les requêtes (en secondes)
+Crawl-delay: 1
+
+# Règles spécifiques pour Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Règles spécifiques pour Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Règles spécifiques pour les réseaux sociaux
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /

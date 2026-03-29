@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Actualités - Admin Polyclinique Kennedy</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root{--primary:#0077B6;--secondary:#00B894;--danger:#E63946;--dark:#212529;--gray:#6C757D;--light:#F8F9FA;--white:#FFF}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Open Sans',sans-serif;background:var(--light);min-height:100vh}
+        .admin-header{background:var(--dark);color:var(--white);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center}
+        .admin-header h1{font-family:'Montserrat',sans-serif;font-size:1.25rem;display:flex;align-items:center;gap:0.5rem}
+        .admin-header h1 i{color:var(--primary)}
+        .btn{padding:0.625rem 1.25rem;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.875rem;transition:all 0.3s;display:inline-flex;align-items:center;gap:0.5rem}
+        .btn-primary{background:var(--primary);color:var(--white)}
+        .btn-primary:hover{background:#005A8C}
+        .btn-secondary{background:var(--gray);color:var(--white)}
+        .btn-danger{background:var(--danger);color:var(--white)}
+        .btn-success{background:var(--secondary);color:var(--white)}
+        .btn-sm{padding:0.5rem 0.875rem;font-size:0.8125rem}
+        .container{max-width:1200px;margin:0 auto;padding:2rem}
+        .admin-nav{background:var(--white);padding:1rem 2rem;border-bottom:1px solid #E9ECEF;display:flex;gap:1rem;flex-wrap:wrap;align-items:center;justify-content:space-between}
+        .admin-nav a{color:var(--gray);text-decoration:none;padding:0.5rem 1rem;border-radius:6px;transition:all 0.3s}
+        .admin-nav a:hover,.admin-nav a.active{background:var(--primary);color:var(--white)}
+        .card{background:var(--white);border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.08);margin-bottom:1.5rem}
+        .card-header{padding:1.25rem;border-bottom:1px solid #E9ECEF;display:flex;justify-content:space-between;align-items:center}
+        .card-header h2{font-family:'Montserrat',sans-serif;font-size:1.125rem;color:var(--dark)}
+        .card-body{padding:1.25rem}
+        .table{width:100%;border-collapse:collapse}
+        .table th,.table td{padding:1rem;text-align:left;border-bottom:1px solid #E9ECEF}
+        .table th{background:var(--light);font-weight:600;font-size:0.875rem;color:var(--gray)}
+        .table td{font-size:0.9375rem}
+        .table img{width:80px;height:50px;object-fit:cover;border-radius:6px}
+        .badge{padding:0.25rem 0.625rem;border-radius:20px;font-size:0.75rem;font-weight:600}
+        .badge-success{background:#D4EDDA;color:#155724}
+        .badge-warning{background:#FFF3CD;color:#856404}
+        .actions{display:flex;gap:0.5rem}
+        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center}
+        .modal.active{display:flex}
+        .modal-content{background:var(--white);border-radius:12px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto}
+        .modal-header{padding:1.25rem;border-bottom:1px solid #E9ECEF;display:flex;justify-content:space-between;align-items:center}
+        .modal-header h3{font-family:'Montserrat',sans-serif;font-size:1.125rem}
+        .modal-close{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--gray)}
+        .modal-body{padding:1.25rem}
+        .modal-footer{padding:1.25rem;border-top:1px solid #E9ECEF;display:flex;gap:1rem;justify-content:flex-end}
+        .form-group{margin-bottom:1rem}
+        .form-group label{display:block;margin-bottom:0.5rem;font-weight:600;font-size:0.875rem;color:var(--dark)}
+        .form-group input,.form-group textarea,.form-group select{width:100%;padding:0.75rem;border:1px solid #DEE2E6;border-radius:8px;font-size:0.9375rem;font-family:inherit}
+        .form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,119,182,0.1)}
+        .form-group textarea{resize:vertical;min-height:100px}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+        .alert{padding:1rem;border-radius:8px;margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem}
+        .alert-success{background:#D4EDDA;color:#155724}
+        .alert-danger{background:#F8D7DA;color:#721C24}
+        .alert-info{background:#D1ECF1;color:#0C5460}
+        .empty-state{text-align:center;padding:3rem;color:var(--gray)}
+        .empty-state i{font-size:3rem;margin-bottom:1rem;color:#DEE2E6}
+        .login-container{max-width:400px;margin:5rem auto;padding:2rem}
+        .login-card{background:var(--white);padding:2rem;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
+        .login-card h2{text-align:center;margin-bottom:1.5rem;color:var(--primary)}
+        .login-logo{text-align:center;margin-bottom:1.5rem;font-size:3rem;color:var(--primary)}
+        @media(max-width:768px){
+            .form-row{grid-template-columns:1fr}
+            .table{font-size:0.875rem}
+            .table th,.table td{padding:0.75rem 0.5rem}
+            .admin-nav{flex-direction:column;align-items:stretch}
+            .actions{flex-direction:column}
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-logo"><i class="fa-solid fa-hospital"></i></div>
+                <h2>Administration</h2>
+                <div id="login-error" class="alert alert-danger" style="display:none"></div>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" placeholder="admin@polycliniquekennedy.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Mot de passe</label>
+                        <input type="password" id="login-password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%">
+                        <i class="fa-solid fa-right-to-bracket"></i> Connexion
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" style="display:none">
+        <header class="admin-header">
+            <h1><i class="fa-solid fa-hospital"></i> Polyclinique Kennedy - Admin</h1>
+            <button class="btn btn-secondary btn-sm" id="logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
+            </button>
+        </header>
+        
+        <nav class="admin-nav">
+            <div>
+                <a href="#" class="active"><i class="fa-solid fa-newspaper"></i> Actualités</a>
+                <a href="index.html" target="_blank"><i class="fa-solid fa-eye"></i> Voir le site</a>
+            </div>
+            <button class="btn btn-primary" id="add-actu-btn">
+                <i class="fa-solid fa-plus"></i> Nouvelle Actualité
+            </button>
+        </nav>
+        
+        <div class="container">
+            <div id="alert-container"></div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fa-solid fa-newspaper"></i> Liste des Actualités</h2>
+                    <span id="actu-count">0 actualité(s)</span>
+                </div>
+                <div class="card-body">
+                    <div id="actualites-loading" class="empty-state">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                        <p>Chargement...</p>
+                    </div>
+                    <table class="table" id="actualites-table" style="display:none">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Titre</th>
+                                <th>Date</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="actualites-tbody"></tbody>
+                    </table>
+                    <div id="actualites-empty" class="empty-state" style="display:none">
+                        <i class="fa-solid fa-newspaper"></i>
+                        <p>Aucune actualité pour le moment</p>
+                        <button class="btn btn-primary" id="add-first-btn">
+                            <i class="fa-solid fa-plus"></i> Ajouter la première actualité
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ajouter/Modifier -->
+    <div class="modal" id="actu-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title"><i class="fa-solid fa-plus"></i> Nouvelle Actualité</h3>
+                <button class="modal-close" id="modal-close">&times;</button>
+            </div>
+            <form id="actu-form">
+                <div class="modal-body">
+                    <input type="hidden" id="actu-id">
+                    <div class="form-group">
+                        <label for="actu-titre">Titre *</label>
+                        <input type="text" id="actu-titre" placeholder="Titre de l'actualité" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="actu-date">Date de publication *</label>
+                            <input type="date" id="actu-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="actu-statut">Statut</label>
+                            <select id="actu-statut">
+                                <option value="true">Publié</option>
+                                <option value="false">Brouillon</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="actu-image">URL de l'image *</label>
+                        <input type="url" id="actu-image" placeholder="https://exemple.com/image.jpg" required>
+                        <small style="color:var(--gray);font-size:0.8125rem">Uploadez sur <a href="https://medias.w2k-digital.com" target="_blank">Cloudflare R2</a> : https://medias.w2k-digital.com/polyclinique-kennedy/nom-image.jpg</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="actu-extrait">Extrait (résumé court) *</label>
+                        <textarea id="actu-extrait" placeholder="Court résumé de l'actualité (2-3 phrases)" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="actu-contenu">Contenu complet</label>
+                        <textarea id="actu-contenu" placeholder="Contenu détaillé de l'actualité..." style="min-height:150px"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="modal-cancel">Annuler</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fa-solid fa-save"></i> Enregistrer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Confirmation Suppression -->
+    <div class="modal" id="delete-modal">
+        <div class="modal-content" style="max-width:400px">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-triangle-exclamation" style="color:var(--danger)"></i> Confirmation</h3>
+                <button class="modal-close" id="delete-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer cette actualité ?</p>
+                <p style="color:var(--gray);font-size:0.875rem">Cette action est irréversible.</p>
+                <input type="hidden" id="delete-actu-id">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="delete-cancel">Annuler</button>
+                <button type="button" class="btn btn-danger" id="delete-confirm">
+                    <i class="fa-solid fa-trash"></i> Supprimer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration Supabase
+        const SUPABASE_URL = 'https://ilycnutphhmuvaonkrsa.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlseWNudXRwaGhtdXZhb25rcnNhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MjY5NDcsImV4cCI6MjA5MDEwMjk0N30.80ipBwMVvAkC2f0Oz2Wzl8E6GjMwlLCoE72XbePtmnM';
+        
+        // URL Cloudflare R2 pour les médias
+        const MEDIA_URL = 'https://medias.w2k-digital.com';
+        
+        // Mode démo désactivé - Supabase configuré
+        const DEMO_MODE = false;
+        
+        // Données démo
+        let demoActualites = [
+            { id: 1, titre: 'Nouveau Scanner Dernière Génération', date_publication: '2025-01-15', image: 'https://medias.w2k-digital.com/polyclinique-kennedy/actu-nouveau-scanner.jpg', extrait: 'La Polyclinique Kennedy se dote d\'un scanner de dernière génération.', contenu: '', actif: true },
+            { id: 2, titre: 'Journée Gratuite de Dépistage', date_publication: '2025-01-10', image: 'https://medias.w2k-digital.com/polyclinique-kennedy/actu-journee-depistage.jpg', extrait: 'Grande journée de dépistage gratuit du diabète et de l\'hypertension.', contenu: '', actif: true },
+            { id: 3, titre: 'Nouveau Pédiatre Rejoint l\'Équipe', date_publication: '2025-01-05', image: 'https://medias.w2k-digital.com/polyclinique-kennedy/actu-nouveau-pediatre.jpg', extrait: 'Dr. Kouamé Akissi, spécialiste en pédiatrie, rejoint notre équipe.', contenu: '', actif: false }
+        ];
+        
+        let currentUser = null;
+        
+        // Éléments DOM
+        const loginScreen = document.getElementById('login-screen');
+        const adminPanel = document.getElementById('admin-panel');
+        const loginForm = document.getElementById('login-form');
+        const loginError = document.getElementById('login-error');
+        const logoutBtn = document.getElementById('logout-btn');
+        const actuModal = document.getElementById('actu-modal');
+        const deleteModal = document.getElementById('delete-modal');
+        const actuForm = document.getElementById('actu-form');
+        const actuTable = document.getElementById('actualites-table');
+        const actuTbody = document.getElementById('actualites-tbody');
+        const actuLoading = document.getElementById('actualites-loading');
+        const actuEmpty = document.getElementById('actualites-empty');
+        const actuCount = document.getElementById('actu-count');
+        const alertContainer = document.getElementById('alert-container');
+        
+        // Login
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (DEMO_MODE) {
+                if (email === 'admin@polycliniquekennedy.com' && password === 'admin123') {
+                    currentUser = { email };
+                    showAdminPanel();
+                } else {
+                    showLoginError('Email ou mot de passe incorrect');
+                }
+                return;
+            }
+            
+            try {
+                const res = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (data.access_token) {
+                    currentUser = data;
+                    localStorage.setItem('supabase_token', data.access_token);
+                    showAdminPanel();
+                } else {
+                    showLoginError('Email ou mot de passe incorrect');
+                }
+            } catch (err) {
+                showLoginError('Erreur de connexion');
+            }
+        });
+        
+        function showLoginError(msg) {
+            loginError.textContent = msg;
+            loginError.style.display = 'flex';
+        }
+        
+        function showAdminPanel() {
+            loginScreen.style.display = 'none';
+            adminPanel.style.display = 'block';
+            loadActualites();
+        }
+        
+        logoutBtn.addEventListener('click', () => {
+            currentUser = null;
+            localStorage.removeItem('supabase_token');
+            adminPanel.style.display = 'none';
+            loginScreen.style.display = 'block';
+            loginForm.reset();
+            loginError.style.display = 'none';
+        });
+        
+        // Charger actualités
+        async function loadActualites() {
+            actuLoading.style.display = 'block';
+            actuTable.style.display = 'none';
+            actuEmpty.style.display = 'none';
+            
+            let actualites = [];
+            
+            if (DEMO_MODE) {
+                actualites = demoActualites;
+            } else {
+                try {
+                    const res = await fetch(SUPABASE_URL + '/rest/v1/actualites?select=*&order=date_publication.desc', {
+                        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + localStorage.getItem('supabase_token') }
+                    });
+                    actualites = await res.json();
+                } catch (err) {
+                    showAlert('Erreur de chargement', 'danger');
+                }
+            }
+            
+            actuLoading.style.display = 'none';
+            
+            if (actualites.length === 0) {
+                actuEmpty.style.display = 'block';
+            } else {
+                actuTable.style.display = 'table';
+                renderActualites(actualites);
+            }
+            
+            actuCount.textContent = actualites.length + ' actualité(s)';
+        }
+        
+        function renderActualites(actualites) {
+            actuTbody.innerHTML = '';
+            actualites.forEach(actu => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><img src="${actu.image}" alt="${actu.titre}" onerror="this.src='images/placeholder.jpg'"></td>
+                    <td><strong>${actu.titre}</strong></td>
+                    <td>${formatDate(actu.date_publication)}</td>
+                    <td><span class="badge ${actu.actif ? 'badge-success' : 'badge-warning'}">${actu.actif ? 'Publié' : 'Brouillon'}</span></td>
+                    <td class="actions">
+                        <button class="btn btn-primary btn-sm" onclick="editActu(${actu.id})"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn btn-danger btn-sm" onclick="confirmDelete(${actu.id})"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                actuTbody.appendChild(tr);
+            });
+        }
+        
+        function formatDate(dateStr) {
+            return new Date(dateStr).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+        
+        // Modal handlers
+        document.getElementById('add-actu-btn').addEventListener('click', openAddModal);
+        document.getElementById('add-first-btn')?.addEventListener('click', openAddModal);
+        document.getElementById('modal-close').addEventListener('click', closeModal);
+        document.getElementById('modal-cancel').addEventListener('click', closeModal);
+        document.getElementById('delete-modal-close').addEventListener('click', () => deleteModal.classList.remove('active'));
+        document.getElementById('delete-cancel').addEventListener('click', () => deleteModal.classList.remove('active'));
+        
+        function openAddModal() {
+            document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-plus"></i> Nouvelle Actualité';
+            document.getElementById('actu-id').value = '';
+            actuForm.reset();
+            document.getElementById('actu-date').value = new Date().toISOString().split('T')[0];
+            actuModal.classList.add('active');
+        }
+        
+        function closeModal() {
+            actuModal.classList.remove('active');
+        }
+        
+        function editActu(id) {
+            const actu = DEMO_MODE ? demoActualites.find(a => a.id === id) : null;
+            if (!actu && DEMO_MODE) return;
+            
+            document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-pen"></i> Modifier l\'Actualité';
+            document.getElementById('actu-id').value = actu.id;
+            document.getElementById('actu-titre').value = actu.titre;
+            document.getElementById('actu-date').value = actu.date_publication;
+            document.getElementById('actu-image').value = actu.image;
+            document.getElementById('actu-extrait').value = actu.extrait;
+            document.getElementById('actu-contenu').value = actu.contenu || '';
+            document.getElementById('actu-statut').value = actu.actif.toString();
+            actuModal.classList.add('active');
+        }
+        
+        function confirmDelete(id) {
+            document.getElementById('delete-actu-id').value = id;
+            deleteModal.classList.add('active');
+        }
+        
+        document.getElementById('delete-confirm').addEventListener('click', async () => {
+            const id = parseInt(document.getElementById('delete-actu-id').value);
+            
+            if (DEMO_MODE) {
+                demoActualites = demoActualites.filter(a => a.id !== id);
+                deleteModal.classList.remove('active');
+                showAlert('Actualité supprimée', 'success');
+                loadActualites();
+                return;
+            }
+            
+            try {
+                await fetch(SUPABASE_URL + '/rest/v1/actualites?id=eq.' + id, {
+                    method: 'DELETE',
+                    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + localStorage.getItem('supabase_token') }
+                });
+                deleteModal.classList.remove('active');
+                showAlert('Actualité supprimée', 'success');
+                loadActualites();
+            } catch (err) {
+                showAlert('Erreur lors de la suppression', 'danger');
+            }
+        });
+        
+        // Save actualité
+        actuForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const id = document.getElementById('actu-id').value;
+            const actu = {
+                titre: document.getElementById('actu-titre').value,
+                date_publication: document.getElementById('actu-date').value,
+                image: document.getElementById('actu-image').value,
+                image_webp: document.getElementById('actu-image').value.replace(/\.(jpg|jpeg|png)$/i, '.webp'),
+                extrait: document.getElementById('actu-extrait').value,
+                contenu: document.getElementById('actu-contenu').value,
+                actif: document.getElementById('actu-statut').value === 'true'
+            };
+            
+            if (DEMO_MODE) {
+                if (id) {
+                    const index = demoActualites.findIndex(a => a.id === parseInt(id));
+                    if (index !== -1) demoActualites[index] = { ...demoActualites[index], ...actu };
+                } else {
+                    actu.id = Date.now();
+                    demoActualites.unshift(actu);
+                }
+                closeModal();
+                showAlert(id ? 'Actualité modifiée' : 'Actualité ajoutée', 'success');
+                loadActualites();
+                return;
+            }
+            
+            try {
+                const method = id ? 'PATCH' : 'POST';
+                const url = id ? SUPABASE_URL + '/rest/v1/actualites?id=eq.' + id : SUPABASE_URL + '/rest/v1/actualites';
+                await fetch(url, {
+                    method,
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_KEY, 
+                        'Authorization': 'Bearer ' + localStorage.getItem('supabase_token'),
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify(actu)
+                });
+                closeModal();
+                showAlert(id ? 'Actualité modifiée' : 'Actualité ajoutée', 'success');
+                loadActualites();
+            } catch (err) {
+                showAlert('Erreur lors de l\'enregistrement', 'danger');
+            }
+        });
+        
+        function showAlert(message, type) {
+            alertContainer.innerHTML = `<div class="alert alert-${type}"><i class="fa-solid fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}</div>`;
+            setTimeout(() => alertContainer.innerHTML = '', 3000);
+        }
+        
+        // Check session on load
+        const savedToken = localStorage.getItem('supabase_token');
+        if (savedToken && !DEMO_MODE) {
+            currentUser = { token: savedToken };
+            showAdminPanel();
+        }
+        
+        // Info mode démo
+        if (DEMO_MODE) {
+            console.log('Mode DEMO actif - Identifiants: admin@polycliniquekennedy.com / admin123');
+        }
+    </script>
+</body>
+</html>

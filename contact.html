@@ -233,7 +233,12 @@
                     <h2>Envoyez-nous un Message</h2>
                     <p>Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais.</p>
                     
-                    <form class="contact-form" id="contact-form" action="#" method="POST">
+                    <form class="contact-form" id="contact-form" action="https://formspree.io/f/xjgpywoe" method="POST">
+                        <!-- Champs cachés Formspree -->
+                        <input type="hidden" name="_subject" value="Nouveau message - Polyclinique Kennedy">
+                        <input type="hidden" name="_next" value="https://polycliniquekennedy.com/merci.html">
+                        <input type="text" name="_gotcha" style="display:none">
+                        
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="nom">Nom complet <span class="required">*</span></label>
@@ -254,17 +259,17 @@
                             <label for="service">Service concerné</label>
                             <select id="service" name="service">
                                 <option value="">-- Sélectionnez un service --</option>
-                                <option value="medecine-generale">Médecine Générale</option>
-                                <option value="pediatrie">Pédiatrie</option>
-                                <option value="maternite">Maternité</option>
-                                <option value="gynecologie">Gynécologie</option>
-                                <option value="dentaire">Cabinet Dentaire</option>
-                                <option value="laboratoire">Laboratoire</option>
-                                <option value="radiologie">Radiologie</option>
-                                <option value="echographie">Échographie</option>
-                                <option value="ophtalmologie">Ophtalmologie</option>
-                                <option value="chirurgie">Chirurgie</option>
-                                <option value="autre">Autre / Renseignement</option>
+                                <option value="Médecine Générale">Médecine Générale</option>
+                                <option value="Pédiatrie">Pédiatrie</option>
+                                <option value="Maternité">Maternité</option>
+                                <option value="Gynécologie">Gynécologie</option>
+                                <option value="Cabinet Dentaire">Cabinet Dentaire</option>
+                                <option value="Laboratoire">Laboratoire</option>
+                                <option value="Radiologie">Radiologie</option>
+                                <option value="Échographie">Échographie</option>
+                                <option value="Ophtalmologie">Ophtalmologie</option>
+                                <option value="Chirurgie">Chirurgie</option>
+                                <option value="Autre">Autre / Renseignement</option>
                             </select>
                         </div>
                         
@@ -274,7 +279,7 @@
                         </div>
                         
                         <div class="form-group form-checkbox">
-                            <input type="checkbox" id="consent" name="consent" required>
+                            <input type="checkbox" id="consent" name="consent" value="J'accepte" required>
                             <label for="consent">
                                 J'accepte que mes données soient traitées conformément à la <a href="confidentialite.html" target="_blank">politique de confidentialité</a>. <span class="required">*</span>
                             </label>

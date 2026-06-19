@@ -1,0 +1,23 @@
+{
+  "name": "Polyclinique Kennedy Bouaké",
+  "short_name": "Kennedy",
+  "description": "Votre établissement de santé de référence à Bouaké, Côte d'Ivoire. Soins médicaux 24h/24.",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#00B4EC",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
